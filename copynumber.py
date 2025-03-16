@@ -1,8 +1,9 @@
 import streamlit as st
 from Bio import Entrez
 
+# Genom verisini çekme fonksiyonu
 def get_genome_length(organism_name):
-    Entrez.email = "your_email@example.com"  # NCBI için geçerli bir e-posta adresi girin
+    Entrez.email = "mailtoburhanettin@gmail.com"  # NCBI için geçerli bir e-posta adresi girin
     
     # Organizmaların arasından uygun olanı bulmak için sorgu yapıyoruz
     search_handle = Entrez.esearch(db="nucleotide", term=organism_name, retmax=1)
@@ -25,14 +26,6 @@ def get_genome_length(organism_name):
         print(f"{organism_name} için genom verisi bulunamadı.")
         return None
 
-# Kullanıcıdan organizma ismini alalım
-organism = input("Genom baz sayısını çekmek istediğiniz organizmanın adını girin: ")
-
-genome_length = get_genome_length(organism)
-if genome_length:
-    print(f"{organism} organizmasının genom uzunluğu: {genome_length}")
-else:
-    print(f"{organism} için genom bilgisi bulunamadı.")
 # ng cinsinden verilen miktar ile kopya sayısı hesaplama fonksiyonu
 def ng_to_copy_number(ng, molar_mass):
     avogadro_number = 6.022e23
@@ -50,8 +43,11 @@ selected_organism = st.selectbox("Organizma Seçin", organisms)
 # Seçilen organizmanın genom bilgisini çekme
 if selected_organism:
     try:
-        genome_length = fetch_genome_info(selected_organism)
-        st.write(f"Seçilen organizmanın genom uzunluğu: {genome_length} baz çifti.")
+        genome_length = get_genome_length(selected_organism)
+        if genome_length:
+            st.write(f"Seçilen organizmanın genom uzunluğu: {genome_length} baz çifti.")
+        else:
+            st.write(f"{selected_organism} için genom bilgisi çekilemedi.")
     except:
         st.write("Genom bilgisi çekilemedi, lütfen tekrar deneyin.")
 
@@ -60,6 +56,15 @@ molecule_type = st.radio("DNA mı yoksa RNA mı?", ("DNA", "RNA"))
 
 # Kullanıcıdan ng cinsinden miktar girmesi isteniyor
 ng_amount = st.number_input("Miktarı girin (ng)", min_value=0.0, format="%.2f")
+
+# Kullanıcıya istediği uzunlukta baz dizisi girme seçeneği ekleniyor
+custom_sequence = st.text_area("Eğer özel bir baz dizisi kullanmak isterseniz, buraya yazın:")
+
+# Eğer kullanıcı özel bir baz dizisi girdiyse, uzunluğunu hesaplayalım
+if custom_sequence:
+    custom_sequence_length = len(custom_sequence)
+    st.write(f"Girdiğiniz özel baz dizisinin uzunluğu: {custom_sequence_length} baz.")
+    genome_length = custom_sequence_length  # Kullanıcının verdiği uzunluğu kullan
 
 # Genom uzunluğuna bağlı olarak molar kütle hesaplama
 if selected_organism == "Homo sapiens":
