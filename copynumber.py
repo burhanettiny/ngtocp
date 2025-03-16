@@ -4,7 +4,7 @@ from Bio import SeqIO
 
 # Genom verisini çekme fonksiyonu
 def get_genome_length(organism_name):
-    Entrez.email = "mailtoburhanettin@gmail.com"  # NCBI için geçerli bir e-posta adresi girin
+    Entrez.email = "your_email@example.com"  # NCBI için geçerli bir e-posta adresi girin
     
     # Organizmaların arasından uygun olanı bulmak için sorgu yapıyoruz
     search_handle = Entrez.esearch(db="nucleotide", term=organism_name, retmax=1)
@@ -19,8 +19,8 @@ def get_genome_length(organism_name):
         genome_record = SeqIO.read(fetch_handle, "genbank")  # GenBank formatında okuma
         fetch_handle.close()
         
-        # Genom uzunluğunu almak için seq.length özelliğini kullanıyoruz
-        genome_length = genome_record.seq.length  # Genom uzunluğunu doğrudan alıyoruz
+        # Genom uzunluğunu almak için seq.length yerine len(genome_record.seq) kullanıyoruz
+        genome_length = len(genome_record.seq)  # Genom uzunluğunu doğrudan alıyoruz
         return genome_length
     else:
         print(f"{organism_name} için genom verisi bulunamadı.")
