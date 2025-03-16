@@ -38,7 +38,7 @@ if language == "Türkçe":
     dilution_message_suggestion = "Önerilen seyreltme oranı: **1:{:.1f}**"
     digital_pcr_message = "Digital PCR için toplam kopya sayısı:"
     formula_title = "📌 Hesaplama Formülü:"
-    formula_1 = r"\text{Kopya Sayısı (cp/µL)} = \frac{\left( \text{Ng/µL} \times 10^{-9} \right) \times 6.022 \times 10^{23}}{\text{Baz Uzunluğu} \times \text{Molar Kütle (g/mol)}}"
+    formula_1 = r"\text{Kopya Sayısı (cp/µL)} = \frac{\left( \text{ng/µL} \times 10^{-9} \right) \times 6.022 \times 10^{23}}{\text{Baz Uzunluğu} \times \text{Molar Kütle (g/mol)}}"
     formula_2 = r"\text{Digital PCR Kopya Sayısı} = \text{(Kopya/µL)} \times \text{Template Hacmi (µL)}"
 else:
     # Başlık ve metinler İngilizce
@@ -53,7 +53,7 @@ else:
     dilution_message_suggestion = "Suggested dilution factor: **1:{:.1f}**"
     digital_pcr_message = "Total copy number for Digital PCR:"
     formula_title = "📌 Calculation Formula:"
-    formula_1 = r"\text{Copy Number (cp/µL)} = \frac{\left( \text{Ng/µL} \times 10^{-9} \right) \times 6.022 \times 10^{23}}{\text{Sequence Length} \times \text{Molar Mass (g/mol)}}"
+    formula_1 = r"\text{Copy Number (cp/µL)} = \frac{\left( \text{ng/µL} \times 10^{-9} \right) \times 6.022 \times 10^{23}}{\text{Sequence Length} \times \text{Molar Mass (g/mol)}}"
     formula_2 = r"\text{Digital PCR Copy Number} = \text{(Copy/µL)} \times \text{Template Volume (µL)}"
 
 # Kullanıcıdan DNA veya RNA türünü seçmesini iste
