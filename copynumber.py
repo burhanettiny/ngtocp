@@ -14,20 +14,19 @@ st.title("DNA/RNA Kopya Sayısı Hesaplayıcı")
 # Kullanıcıdan DNA veya RNA türünü seçmesini iste
 molecule_type = st.radio("Molekül tipi:", ("DNA", "RNA"))
 
-# Kullanıcıdan tek zincirli (ss) veya çift zincirli (ds) olup olmadığını seçmesini iste
-strand_type = st.radio("Tek zincirli (ss) mi yoksa çift zincirli (ds) mi?", ("ss", "ds"))
+# Eğer DNA seçildiyse ss veya ds seçeneğini göster
+if molecule_type == "DNA":
+    strand_type = st.radio("Tek zincirli (ss) mi yoksa çift zincirli (ds) mi?", ("ss", "ds"))
+    molar_mass_per_base = 660 if strand_type == "ds" else 330  # dsDNA = 660 g/mol/baz, ssDNA = 330 g/mol/baz
+else:
+    strand_type = "ss"  # RNA genellikle tek zincirli olduğundan otomatik olarak "ss" olarak atanır.
+    molar_mass_per_base = 340  # ssRNA = 340 g/mol/baz
 
 # Kullanıcıdan baz uzunluğu girmesini iste
 sequence_length = st.number_input("Baz uzunluğunu girin (baz sayısı)", min_value=1, value=1000)
 
 # Kullanıcıdan ng/uL cinsinden miktar girmesini iste
 ng_per_ul = st.number_input("Konsantrasyonu girin (ng/µL)", min_value=0.0, format="%.2f")
-
-# Molekül tipine ve zincir tipine göre molar kütleyi belirle
-if molecule_type == "DNA":
-    molar_mass_per_base = 660 if strand_type == "ds" else 330  # dsDNA = 660 g/mol/baz, ssDNA = 330 g/mol/baz
-else:  # RNA
-    molar_mass_per_base = 340  # RNA için genellikle tek zincirli olduğu varsayılır
 
 # Hesaplama yap
 if sequence_length > 0 and ng_per_ul > 0:
