@@ -72,15 +72,15 @@ else:
                 st.write(f"Seçilen organizmanın genom uzunluğu: {genome_length} baz.")
             else:
                 st.write(f"{selected_organism} için genom bilgisi çekilemedi.")
-        except:
-            st.write("Genom bilgisi çekilemedi, lütfen tekrar deneyin.")
+        except Exception as e:
+            st.write(f"Genom bilgisi çekilemedi, hata: {e}")
 
-# Kopya sayısını hesaplama
-if ng_amount > 0 and genome_length > 0:
+# Genom uzunluğu ve ng miktarının geçerliliğini kontrol etme
+if ng_amount > 0 and genome_length and genome_length > 0:
     copy_number = ng_to_copy_number(ng_amount, molar_mass)
     st.write(f"{ng_amount} ng {selected_organism} {molecule_type} için kopya sayısı yaklaşık {copy_number:.2e} kopyadır.")
 else:
-    st.write("Lütfen geçerli bir miktar girin.")
+    st.write("Lütfen geçerli bir miktar girin veya genom uzunluğunu kontrol edin.")
 
 # Seçilen organizmanın genom büyüklüğünü alt kısımda gösterme
 if selected_organism:
