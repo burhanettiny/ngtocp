@@ -31,14 +31,14 @@ ng_per_ul = st.number_input("Konsantrasyonu girin (ng/µL)", min_value=0.0, form
 # Hesaplama yap
 if sequence_length > 0 and ng_per_ul > 0:
     cp_per_ul = ng_to_cp_per_ul(ng_per_ul, sequence_length, molar_mass_per_base)
-    st.write(f"{ng_per_ul} ng/µL {strand_type}{molecule_type} için kopya sayısı yaklaşık {cp_per_ul:.2e} kopya/µL'dir.")
+    st.write(f"{ng_per_ul} ng/µL {strand_type}{molecule_type} için kopya sayısı yaklaşık **{cp_per_ul:.3e}** kopya/µL'dir.")
 else:
     st.write("Lütfen geçerli bir baz uzunluğu ve ng/µL değeri girin.")
 
 # Hesaplama formülünü bilimsel olarak gösterme
 st.subheader("Hesaplama Formülü:")
 st.latex(r"""
-\text{Kopya Sayısı (cp/µL)} = \frac{\text{Ng/µL} \times (6.022 \times 10^{23})}{\text{Molar Kütle} \times \text{Baz Uzunluğu}}
+\text{Kopya Sayısı (cp/µL)} = \frac{\left( \text{Ng/µL} \times 10^{-9} \right) \times 6.022 \times 10^{23}}{\text{Baz Uzunluğu} \times \text{Molar Kütle (g/mol)}}
 """)
 
 st.write("""
