@@ -27,7 +27,7 @@ language = st.radio("Dil Seçin:", ("Türkçe", "English"))
 
 if language == "Türkçe":
     # Başlık ve metinler Türkçe
-    st.title("🔬 DNA/RNA Kopya Sayısı ve Digital PCR Hesaplayıcı")
+    st.title("🔬 DNA/RNA Kopya Sayısı Hesaplayıcı")
     molecule_type_label = "Molekül tipi:"
     sequence_length_label = "Baz uzunluğunu girin (baz sayısı)"
     ng_per_ul_label = "Konsantrasyonu girin (ng/µL)"
@@ -42,7 +42,7 @@ if language == "Türkçe":
     formula_2 = r"\text{Digital PCR Kopya Sayısı} = \text{(Kopya/µL)} \times \text{Template Hacmi (µL)}"
 else:
     # Başlık ve metinler İngilizce
-    st.title("🔬 DNA/RNA Copy Number and Digital PCR Calculator")
+    st.title("🔬 DNA/RNA Copy Number Calculator")
     molecule_type_label = "Molecule type:"
     sequence_length_label = "Enter sequence length (base count)"
     ng_per_ul_label = "Enter concentration (ng/µL)"
