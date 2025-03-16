@@ -1,26 +1,38 @@
 import streamlit as st
 from Bio import Entrez
 
-# NCBI'den genom bilgisi çekme fonksiyonu
-def fetch_genome_info(organism):
-    Entrez.email = "mailtoburhanettin@gmail.com"  # Biopython için email adresinizi girin
-    search_handle = Entrez.esearch(db="nucleotide", term=organism + "[Orgn]", retmax=1)
+def get_genome_length(organism_name):
+    Entrez.email = "your_email@example.com"  # NCBI için geçerli bir e-posta adresi girin
+    
+    # Organizmaların arasından uygun olanı bulmak için sorgu yapıyoruz
+    search_handle = Entrez.esearch(db="nucleotide", term=organism_name, retmax=1)
     search_results = Entrez.read(search_handle)
     search_handle.close()
     
-    # İlk sonucun accession numarasını al
-    accession_number = search_results["IdList"][0]
-    
-    # Accession numarasına ait detayları çek
-    fetch_handle = Entrez.efetch(db="nucleotide", id=accession_number, rettype="gb", retmode="text")
-    record = Entrez.read(fetch_handle)
-    fetch_handle.close()
-    
-    # Genom uzunluğunu (baz çiftleri olarak) çek
-    genome_length = int(record[0]['GBSeq_length'])
-    
-    return genome_length
+    # Eğer sonuç bulunursa, genoma ait veriyi çekelim
+    if search_results["Count"] != "0":
+        # Genom verisini çekmek için, arama sonucundaki ilk kayıtla ilgili detayları alıyoruz
+        seq_id = search_results["IdList"][0]
+        fetch_handle = Entrez.efetch(db="nucleotide", id=seq_id, rettype="gb", retmode="text")
+        genome_record = fetch_handle.read()
+        fetch_handle.close()
+        
+        # Genomun uzunluğunu bulmak için (GB formatında) dosya okuma işlemi yapıyoruz
+        genome_length = genome_record.count('N')  # 'N' olanları sayabiliriz (bazen 'N' bulunabilir)
+        
+        return genome_length
+    else:
+        print(f"{organism_name} için genom verisi bulunamadı.")
+        return None
 
+# Kullanıcıdan organizma ismini alalım
+organism = input("Genom baz sayısını çekmek istediğiniz organizmanın adını girin: ")
+
+genome_length = get_genome_length(organism)
+if genome_length:
+    print(f"{organism} organizmasının genom uzunluğu: {genome_length}")
+else:
+    print(f"{organism} için genom bilgisi bulunamadı.")
 # ng cinsinden verilen miktar ile kopya sayısı hesaplama fonksiyonu
 def ng_to_copy_number(ng, molar_mass):
     avogadro_number = 6.022e23
