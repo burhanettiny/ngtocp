@@ -71,7 +71,12 @@ else:
             if genome_length and genome_length > 0:
                 st.write(f"Seçilen organizmanın genom uzunluğu: {genome_length} baz.")
             else:
-                st.write(f"{selected_organism} için genom bilgisi çekilemedi.")
+                # Homo sapiens için varsayılan genom uzunluğu
+                if selected_organism == "Homo sapiens":
+                    genome_length = 3200000000  # 3.2 milyar baz
+                    st.write(f"**Homo sapiens** genom uzunluğu varsayılan olarak {genome_length} baz kabul edilmiştir.")
+                else:
+                    st.write(f"{selected_organism} için genom bilgisi çekilemedi.")
         except Exception as e:
             st.write(f"Genom bilgisi çekilemedi, hata: {e}")
 
