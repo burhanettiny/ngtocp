@@ -68,7 +68,7 @@ else:
     if selected_organism:
         try:
             genome_length = get_genome_length(selected_organism)
-            if genome_length:
+            if genome_length and genome_length > 0:
                 st.write(f"Seçilen organizmanın genom uzunluğu: {genome_length} baz.")
             else:
                 st.write(f"{selected_organism} için genom bilgisi çekilemedi.")
