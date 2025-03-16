@@ -4,7 +4,7 @@ import numpy as np
 # ng/uL cinsinden verilen miktar ile kopya sayısını hesaplama fonksiyonu
 def ng_to_cp_per_ul(ng_per_ul, sequence_length, molar_mass_per_base):
     avogadro_number = 6.022e23  # Avogadro sayısı
-    ng_in_grams = ng_per_ul * 1e-9  # ng'i gram cinsine çeviriyoruz
+    ng_in_grams = ng_per_ul * 1e-9  # ng'yi gram cinsine çeviriyoruz
     total_molar_mass = molar_mass_per_base * sequence_length  # DNA/RNA'nın toplam molar kütlesi
     copy_number_per_ul = (ng_in_grams * avogadro_number) / total_molar_mass  # Kopya sayısı hesaplama
     return copy_number_per_ul
@@ -50,13 +50,18 @@ ng_per_ul = st.number_input("Konsantrasyonu girin (ng/µL)", min_value=0.0, form
 # Hesaplama yap
 if sequence_length > 0 and ng_per_ul > 0:
     cp_per_ul = ng_to_cp_per_ul(ng_per_ul, sequence_length, molar_mass_per_base)
-    
+
+    # Bilimsel gösterimde ve tam sayı olarak ayrıştırılmış gösterim
+    cp_sci_notation = f"{cp_per_ul:.3e}"  # Bilimsel gösterim
+    cp_digits = f"{cp_per_ul:,.0f}"  # Virgüllü tam sayı gösterimi
+
     # Sonucu çerçeve içinde gösterme
     st.markdown(
         f"""
         <div style="border: 2px solid #4CAF50; padding: 10px; border-radius: 10px; background-color: #e8f5e9; text-align: center; font-size: 20px;">
             <b>{ng_per_ul:.2f} ng/µL {strand_type}{molecule_type} için kopya sayısı:</b> <br>
-            <b style="color: #2E7D32;">{cp_per_ul:.3e} kopya/µL</b>
+            <b style="color: #2E7D32;">{cp_sci_notation} kopya/µL</b> <br>
+            <b style="color: #1E88E5;">({cp_digits} kopya/µL)</b>
         </div>
         """, unsafe_allow_html=True
     )
@@ -67,7 +72,7 @@ if sequence_length > 0 and ng_per_ul > 0:
     if target_cp_ul > 0:
         dilution_factor, dilution_message = calculate_dilution_factor(cp_per_ul, target_cp_ul)
         serial_dilution_suggestion = suggest_serial_dilution(dilution_factor)
-        
+
         # Seyreltme önerisini çerçeve içinde göster
         st.markdown(
             f"""
