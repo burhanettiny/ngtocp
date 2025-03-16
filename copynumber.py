@@ -3,7 +3,7 @@ from Bio import Entrez
 
 # NCBI'den genom bilgisi çekme fonksiyonu
 def fetch_genome_info(organism):
-    Entrez.email = "your_email@example.com"  # Biopython için email adresinizi girin
+    Entrez.email = "mailtoburhanettin@gmail.com"  # Biopython için email adresinizi girin
     search_handle = Entrez.esearch(db="nucleotide", term=organism + "[Orgn]", retmax=1)
     search_results = Entrez.read(search_handle)
     search_handle.close()
