@@ -1,54 +1,56 @@
 import streamlit as st
 
-# ng cinsinden verilen miktar ile kopya sayısı hesaplama fonksiyonu
-def ng_to_copy_number(ng_per_ul, molar_mass, sequence_length):
+# ng/uL cinsinden verilen miktar ile kopya sayısını hesaplama fonksiyonu
+def ng_to_cp_per_ul(ng_per_ul, sequence_length, molar_mass_per_base):
     avogadro_number = 6.022e23  # Avogadro sayısı
     ng_in_grams = ng_per_ul * 1e-9  # ng'i gram cinsine çeviriyoruz
-    total_mass = molar_mass * sequence_length  # Toplam molar kütleyi hesaplıyoruz
-    copy_number_per_ul = (ng_in_grams * avogadro_number) / total_mass  # Kopya sayısı hesaplama
+    total_molar_mass = molar_mass_per_base * sequence_length  # DNA/RNA'nın toplam molar kütlesi
+    copy_number_per_ul = (ng_in_grams * avogadro_number) / total_molar_mass  # Kopya sayısı hesaplama
     return copy_number_per_ul
 
 # Streamlit uygulaması
 st.title("DNA/RNA Kopya Sayısı Hesaplayıcı")
 
-# Kullanıcıdan DNA veya RNA baz dizisi girmesini isteyelim
-sequence_input = st.text_area("DNA/RNA baz dizisini girin", height=200)
+# Kullanıcıdan DNA veya RNA türünü seçmesini iste
+molecule_type = st.radio("Molekül tipi:", ("DNA", "RNA"))
 
-# Kullanıcıdan DNA/RNA türü seçmesi isteniyor
-molecule_type = st.radio("DNA mı yoksa RNA mı?", ("DNA", "RNA"))
+# Kullanıcıdan tek zincirli (ss) veya çift zincirli (ds) olup olmadığını seçmesini iste
+strand_type = st.radio("Tek zincirli (ss) mi yoksa çift zincirli (ds) mi?", ("ss", "ds"))
 
-# Kullanıcıdan baz uzunluğu girmesi isteniyor
-sequence_length = st.number_input("Baz dizisinin uzunluğunu girin (baz sayısı)", min_value=1, value=1000)
+# Kullanıcıdan baz uzunluğu girmesini iste
+sequence_length = st.number_input("Baz uzunluğunu girin (baz sayısı)", min_value=1, value=1000)
 
-# Kullanıcıdan ng/uL cinsinden miktar girmesi isteniyor
-ng_per_ul = st.number_input("Miktarı girin (ng/µL)", min_value=0.0, format="%.2f")
+# Kullanıcıdan ng/uL cinsinden miktar girmesini iste
+ng_per_ul = st.number_input("Konsantrasyonu girin (ng/µL)", min_value=0.0, format="%.2f")
 
-# Kullanıcıya özel bir molar kütle değeri girme seçeneği (1000 baz çiftli DNA için)
-molar_mass = st.number_input("Molar kütleyi girin (ng/baz çifti)", min_value=0.0, value=650000.0)
+# Molekül tipine ve zincir tipine göre molar kütleyi belirle
+if molecule_type == "DNA":
+    molar_mass_per_base = 660 if strand_type == "ds" else 330  # dsDNA = 660 g/mol/baz, ssDNA = 330 g/mol/baz
+else:  # RNA
+    molar_mass_per_base = 340  # RNA için genellikle tek zincirli olduğu varsayılır
 
-# Baz dizisini kontrol etme
-if sequence_input:
-    st.write(f"Verilen dizinin uzunluğu: {sequence_length} baz.")
-
-    # Kopya sayısını hesaplama
-    if ng_per_ul > 0 and molar_mass > 0 and sequence_length > 0:
-        copy_number_per_ul = ng_to_copy_number(ng_per_ul, molar_mass, sequence_length)
-        st.write(f"{ng_per_ul} ng/µL {molecule_type} için kopya sayısı yaklaşık {copy_number_per_ul:.2e} kopyadır.")
-    else:
-        st.write("Lütfen geçerli bir miktar, molar kütle ve baz uzunluğu girin.")
+# Hesaplama yap
+if sequence_length > 0 and ng_per_ul > 0:
+    cp_per_ul = ng_to_cp_per_ul(ng_per_ul, sequence_length, molar_mass_per_base)
+    st.write(f"{ng_per_ul} ng/µL {strand_type}{molecule_type} için kopya sayısı yaklaşık {cp_per_ul:.2e} kopya/µL'dir.")
 else:
-    st.write("Lütfen bir DNA/RNA baz dizisi girin.")
+    st.write("Lütfen geçerli bir baz uzunluğu ve ng/µL değeri girin.")
 
-# Hesaplama formülünü alt kısımda bilimsel olarak gösterme
+# Hesaplama formülünü bilimsel olarak gösterme
 st.subheader("Hesaplama Formülü:")
 st.write("""
 Kopya sayısı hesaplama formülü:
 
-Kopya Sayısı per µL = (Ng/µL * Avogadro Sayısı) / (Molar Kütle * Baz Uzunluğu)
+\\[
+Kopya \\ Sayısı (\\text{cp/µL}) = \\frac{ (Ng/µL) \\times (6.022 × 10^{23}) }{ \\text{Molar Kütle} \\times \\text{Baz Uzunluğu} }
+\\]
 
 Açıklamalar:
-- Ng/µL: Numune miktarı (ng/µL)
-- Avogadro Sayısı: 6.022 × 10²³ (Bir moldeki partikül sayısı)
-- Molar Kütle: DNA/RNA'nın bir baz çifti başına kütlesi (ng/baz çifti)
-- Baz Uzunluğu: DNA/RNA dizisinin uzunluğu (baz sayısı)
+- **Ng/µL**: Numune konsantrasyonu (nanogram/µL)
+- **Avogadro Sayısı**: 6.022 × 10²³ (Bir moldaki molekül sayısı)
+- **Molar Kütle**: DNA/RNA’nın **bir baz başına** kütlesi (g/mol)  
+  - ssDNA: **330 g/mol**  
+  - dsDNA: **660 g/mol**  
+  - ssRNA: **340 g/mol**  
+- **Baz Uzunluğu**: DNA/RNA dizisinin uzunluğu (baz sayısı)
 """)
