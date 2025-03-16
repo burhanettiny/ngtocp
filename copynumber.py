@@ -48,7 +48,7 @@ if sequence_length > 0 and ng_per_ul > 0:
 
     # Bilimsel gösterimde ve tam sayı olarak ayrıştırılmış gösterim
     cp_sci_notation = f"{cp_per_ul:.3e}"  # Bilimsel gösterim
-    cp_digits = f"{cp_per_ul:,.0f}"  # Virgüllü tam sayı gösterimi
+    cp_digits = f"{cp_per_ul:.0f}"  # Virgülsüz tam sayı gösterimi
 
     # Sonucu çerçeve içinde gösterme
     st.markdown(
@@ -71,7 +71,7 @@ if sequence_length > 0 and ng_per_ul > 0:
         st.markdown(
             f"""
             <div style="border: 2px solid #FF9800; padding: 10px; border-radius: 10px; background-color: #FFF3E0; text-align: center; font-size: 18px;">
-                <b>Hedef Kopya Sayısı: {target_cp_ul:,.0f} cp/µL</b> <br>
+                <b>Hedef Kopya Sayısı: {target_cp_ul:.0f} cp/µL</b> <br>
                 <b style="color: #E65100;">{dilution_message}</b>
             </div>
             """, unsafe_allow_html=True
