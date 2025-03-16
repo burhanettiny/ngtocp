@@ -66,8 +66,8 @@ if sequence_length > 0 and ng_per_ul > 0:
         """, unsafe_allow_html=True
     )
 
-    # Kullanıcıdan çalışmak istediği hedef kopya sayısını al
-    target_cp_ul = st.number_input("Çalışmak istediğiniz kopya sayısını girin (cp/µL)", min_value=0.0, format="%.2e")
+    # Kullanıcıdan çalışmak istediği hedef kopya sayısını al (e formatı olmadan)
+    target_cp_ul = st.number_input("Çalışmak istediğiniz kopya sayısını girin (cp/µL)", min_value=0.0, format="%.0f")
 
     if target_cp_ul > 0:
         dilution_factor, dilution_message = calculate_dilution_factor(cp_per_ul, target_cp_ul)
@@ -77,7 +77,7 @@ if sequence_length > 0 and ng_per_ul > 0:
         st.markdown(
             f"""
             <div style="border: 2px solid #FF9800; padding: 10px; border-radius: 10px; background-color: #FFF3E0; text-align: center; font-size: 18px;">
-                <b>Hedef Kopya Sayısı: {target_cp_ul:.3e} cp/µL</b> <br>
+                <b>Hedef Kopya Sayısı: {target_cp_ul:,.0f} cp/µL</b> <br>
                 <b style="color: #E65100;">{dilution_message}</b>
             </div>
             """, unsafe_allow_html=True
