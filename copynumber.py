@@ -92,22 +92,6 @@ if sequence_length > 0 and ng_per_ul > 0:
         """, unsafe_allow_html=True
     )
 
-    # Kullanıcıdan çalışmak istediği hedef kopya sayısını al (e formatı olmadan)
-    target_cp_ul = st.number_input(target_cp_ul_label, min_value=0.0, format="%.0f")
-
-    if target_cp_ul > 0:
-        dilution_factor, dilution_message = calculate_dilution_factor(cp_per_ul, target_cp_ul)
-
-        # Seyreltme önerisini çerçeve içinde göster
-        st.markdown(
-            f"""
-            <div style="border: 2px solid #FF9800; padding: 10px; border-radius: 10px; background-color: #FFF3E0; text-align: center; font-size: 18px;">
-                <b>Hedef Kopya Sayısı: {target_cp_ul:.0f} cp/µL</b> <br>
-                <b style="color: #E65100;">{dilution_message}</b>
-            </div>
-            """, unsafe_allow_html=True
-        )
-
     # Digital PCR hesaplama bölümü
     st.subheader("🧬 Digital PCR Reaksiyon Hesaplaması")
 
@@ -126,6 +110,21 @@ if sequence_length > 0 and ng_per_ul > 0:
                 <b style="color: #1A237E;">{copies_per_reaction:.0f} kopya/reaksiyon</b> <br>
                 <b style="color: #304FFE;">({copies_per_ul_reaction:.2f} kopya/µL.reaksiyon hacmi)</b>
               </div>
+            """, unsafe_allow_html=True
+        )
+    # Kullanıcıdan çalışmak istediği hedef kopya sayısını al (e formatı olmadan)
+    target_cp_ul = st.number_input(target_cp_ul_label, min_value=0.0, format="%.0f")
+
+    if target_cp_ul > 0:
+        dilution_factor, dilution_message = calculate_dilution_factor(cp_per_ul, target_cp_ul)
+
+        # Seyreltme önerisini çerçeve içinde göster
+        st.markdown(
+            f"""
+            <div style="border: 2px solid #FF9800; padding: 10px; border-radius: 10px; background-color: #FFF3E0; text-align: center; font-size: 18px;">
+                <b>Hedef Kopya Sayısı: {target_cp_ul:.0f} cp/µL</b> <br>
+                <b style="color: #E65100;">{dilution_message}</b>
+            </div>
             """, unsafe_allow_html=True
         )
 
