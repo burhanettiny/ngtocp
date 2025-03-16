@@ -93,8 +93,8 @@ if sequence_length > 0 and ng_per_ul > 0:
             <div style="border: 2px solid #3F51B5; padding: 10px; border-radius: 10px; background-color: #E3F2FD; text-align: center; font-size: 20px;">
                 <b>Digital PCR için toplam kopya sayısı:</b> <br>
                 <b style="color: #1A237E;">{copies_per_reaction:,.0f} kopya/reaksiyon</b> <br>
-                <b style="color: #304FFE;">({copies_per_ul_reaction:.2f} kopya/µL reaksiyon hacmi)</b>
-            </div>
+                <b style="color: #304FFE;">({copies_per_ul_reaction:.2f} kopya/µL.reaksiyon hacmi)</b>
+              </div>
             """, unsafe_allow_html=True
         )
 
