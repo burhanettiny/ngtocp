@@ -4,7 +4,7 @@ from Bio import SeqIO
 
 # Genom verisini çekme fonksiyonu
 def get_genome_length(organism_name):
-    Entrez.email = "your_email@example.com"  # NCBI için geçerli bir e-posta adresi girin
+    Entrez.email = "mailtoburhanettin@gmail.com"  # NCBI için geçerli bir e-posta adresi girin
     
     # Organizmaların arasından uygun olanı bulmak için sorgu yapıyoruz
     search_handle = Entrez.esearch(db="nucleotide", term=organism_name, retmax=1)
