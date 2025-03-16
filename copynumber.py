@@ -16,19 +16,14 @@ def calculate_dilution_factor(initial_cp_ul, target_cp_ul):
     dilution_factor = initial_cp_ul / target_cp_ul
     return dilution_factor, f"Önerilen seyreltme oranı: **1:{dilution_factor:.1f}**"
 
-# Seri dilüsyon önerme fonksiyonu
-def suggest_serial_dilution(dilution_factor):
-    dilutions = [2, 5, 10]
-    suggested = None
-    for d in dilutions:
-        steps = np.log(dilution_factor) / np.log(d)
-        if steps.is_integer() or (steps % 1 < 0.2 or steps % 1 > 0.8):  # Yaklaşık tam sayı kontrolü
-            suggested = f"{int(round(steps))} adımda **{d}-kat** seri dilüsyon yapabilirsiniz."
-            break
-    return suggested or "Seri dilüsyon için kesin bir oran bulunamadı, hassas seyreltme önerilir."
+# Digital PCR reaksiyonu için kopya sayısı hesaplama
+def calculate_digital_pcr_copies(cp_per_ul, template_volume_ul, reaction_volume_ul):
+    copies_per_reaction = cp_per_ul * template_volume_ul  # Reaksiyona giren toplam kopya
+    copies_per_ul_reaction = copies_per_reaction / reaction_volume_ul  # Reaksiyon hacmine normalize etme
+    return copies_per_reaction, copies_per_ul_reaction
 
 # Streamlit uygulaması başlığı
-st.title("🔬 DNA/RNA Kopya Sayısı ve Seyreltme Hesaplayıcı")
+st.title("🔬 DNA/RNA Kopya Sayısı ve Digital PCR Hesaplayıcı")
 
 # Kullanıcıdan DNA veya RNA türünü seçmesini iste
 molecule_type = st.radio("Molekül tipi:", ("DNA", "RNA"))
@@ -71,7 +66,6 @@ if sequence_length > 0 and ng_per_ul > 0:
 
     if target_cp_ul > 0:
         dilution_factor, dilution_message = calculate_dilution_factor(cp_per_ul, target_cp_ul)
-        serial_dilution_suggestion = suggest_serial_dilution(dilution_factor)
 
         # Seyreltme önerisini çerçeve içinde göster
         st.markdown(
@@ -83,11 +77,26 @@ if sequence_length > 0 and ng_per_ul > 0:
             """, unsafe_allow_html=True
         )
 
-        # Seri dilüsyon önerisini göster
-        st.write(f"🔬 {serial_dilution_suggestion}")
+    # Digital PCR hesaplama bölümü
+    st.subheader("🧬 Digital PCR Reaksiyon Hesaplaması")
 
-else:
-    st.write("Lütfen geçerli bir baz uzunluğu ve ng/µL değeri girin.")
+    # Kullanıcıdan dPCR reaksiyon hacmi ve template hacmi al
+    reaction_volume_ul = st.number_input("Digital PCR reaksiyon hacmi (µL)", min_value=0.1, value=20.0, step=0.1)
+    template_volume_ul = st.number_input("Template DNA/RNA hacmi (µL)", min_value=0.1, value=2.0, step=0.1)
+
+    if reaction_volume_ul > 0 and template_volume_ul > 0:
+        copies_per_reaction, copies_per_ul_reaction = calculate_digital_pcr_copies(cp_per_ul, template_volume_ul, reaction_volume_ul)
+
+        # Sonucu çerçeve içinde gösterme
+        st.markdown(
+            f"""
+            <div style="border: 2px solid #3F51B5; padding: 10px; border-radius: 10px; background-color: #E3F2FD; text-align: center; font-size: 20px;">
+                <b>Digital PCR için toplam kopya sayısı:</b> <br>
+                <b style="color: #1A237E;">{copies_per_reaction:,.0f} kopya/reaksiyon</b> <br>
+                <b style="color: #304FFE;">({copies_per_ul_reaction:.2f} kopya/µL reaksiyon hacmi)</b>
+            </div>
+            """, unsafe_allow_html=True
+        )
 
 # Hesaplama formülünü bilimsel olarak gösterme
 st.subheader("📌 Hesaplama Formülü:")
@@ -95,15 +104,7 @@ st.latex(r"""
 \text{Kopya Sayısı (cp/µL)} = \frac{\left( \text{Ng/µL} \times 10^{-9} \right) \times 6.022 \times 10^{23}}{\text{Baz Uzunluğu} \times \text{Molar Kütle (g/mol)}}
 """)
 
-st.write("""
-### Açıklamalar:
-- **Ng/µL**: Numune konsantrasyonu (nanogram/µL)
-- **Avogadro Sayısı**: \\(6.022 \times 10^{23}\\) (Bir moldaki molekül sayısı)
-- **Molar Kütle**: DNA/RNA’nın **bir baz başına** kütlesi (g/mol)  
-  - ssDNA: **330 g/mol**  
-  - dsDNA: **660 g/mol**  
-  - ssRNA: **340 g/mol**  
-- **Baz Uzunluğu**: DNA/RNA dizisinin uzunluğu (baz sayısı)
-- **Seyreltme Oranı**: Başlangıç kopya sayısını hedeflenen kopya sayısına düşürmek için gerekli oran
-- **Seri Dilüsyon**: Küçük adımlarla doğruluk sağlamak için önerilen ardışık seyreltme oranı
+st.latex(r"""
+\text{Digital PCR Kopya Sayısı} = \text{(Kopya/µL)} \times \text{Template Hacmi (µL)}
 """)
+
