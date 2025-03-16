@@ -1,5 +1,6 @@
 import streamlit as st
 from Bio import Entrez
+from Bio import SeqIO
 
 # Genom verisini çekme fonksiyonu
 def get_genome_length(organism_name):
@@ -15,12 +16,11 @@ def get_genome_length(organism_name):
         # Genom verisini çekmek için, arama sonucundaki ilk kayıtla ilgili detayları alıyoruz
         seq_id = search_results["IdList"][0]
         fetch_handle = Entrez.efetch(db="nucleotide", id=seq_id, rettype="gb", retmode="text")
-        genome_record = fetch_handle.read()
+        genome_record = SeqIO.read(fetch_handle, "genbank")  # GenBank formatında okuma
         fetch_handle.close()
         
-        # Genomun uzunluğunu bulmak için (GB formatında) dosya okuma işlemi yapıyoruz
-        genome_length = genome_record.count('N')  # 'N' olanları sayabiliriz (bazen 'N' bulunabilir)
-        
+        # Genom uzunluğunu almak için seq.length özelliğini kullanıyoruz
+        genome_length = genome_record.seq.length  # Genom uzunluğunu doğrudan alıyoruz
         return genome_length
     else:
         print(f"{organism_name} için genom verisi bulunamadı.")
@@ -69,7 +69,7 @@ else:
         try:
             genome_length = get_genome_length(selected_organism)
             if genome_length:
-                st.write(f"Seçilen organizmanın genom uzunluğu: {genome_length} baz çifti.")
+                st.write(f"Seçilen organizmanın genom uzunluğu: {genome_length} baz.")
             else:
                 st.write(f"{selected_organism} için genom bilgisi çekilemedi.")
         except:
@@ -88,6 +88,6 @@ if selected_organism:
     if user_genome_length > 0:
         st.write(f"**Girilen genom uzunluğu:** {user_genome_length} baz.")
     elif genome_length:
-        st.write(f"**Genom uzunluğu NCBI'den alındı:** {genome_length} baz çifti.")
+        st.write(f"**Genom uzunluğu NCBI'den alındı:** {genome_length} baz.")
     else:
         st.write("Genom bilgisi bulunamadı.")
