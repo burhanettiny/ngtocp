@@ -37,16 +37,14 @@ else:
 
 # Hesaplama formülünü bilimsel olarak gösterme
 st.subheader("Hesaplama Formülü:")
+st.latex(r"""
+\text{Kopya Sayısı (cp/µL)} = \frac{\text{Ng/µL} \times (6.022 \times 10^{23})}{\text{Molar Kütle} \times \text{Baz Uzunluğu}}
+""")
+
 st.write("""
-Kopya sayısı hesaplama formülü:
-
-\\[
-Kopya \\ Sayısı (\\text{cp/µL}) = \\frac{ (Ng/µL) \\times (6.022 × 10^{23}) }{ \\text{Molar Kütle} \\times \\text{Baz Uzunluğu} }
-\\]
-
 Açıklamalar:
 - **Ng/µL**: Numune konsantrasyonu (nanogram/µL)
-- **Avogadro Sayısı**: 6.022 × 10²³ (Bir moldaki molekül sayısı)
+- **Avogadro Sayısı**: \\(6.022 \times 10^{23}\\) (Bir moldaki molekül sayısı)
 - **Molar Kütle**: DNA/RNA’nın **bir baz başına** kütlesi (g/mol)  
   - ssDNA: **330 g/mol**  
   - dsDNA: **660 g/mol**  
